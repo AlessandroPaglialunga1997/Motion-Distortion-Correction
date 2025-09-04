@@ -11,8 +11,8 @@ namespace Constants {
     const double trajectoryDuration = 10; // seconds
 
     // Helical Trajectory
-    const double helicalRadius = 1;       // meter
-    const double helicalHeight = 2;       // meters
+    const double helicalRadius = 3.2;       // meter
+    const double helicalHeight = 4.8;       // meters
     const Eigen::Vector3d positionOffset(-helicalRadius, 0.0, 0.0);
 
 }
