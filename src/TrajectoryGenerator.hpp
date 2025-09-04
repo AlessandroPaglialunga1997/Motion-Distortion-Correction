@@ -8,5 +8,6 @@ class TrajectoryGenerator {
         std::vector<TrajectoryPoint> getHelicalTrajectory(double radius, 
                                                           double height, 
                                                           double duration, 
-                                                          double deltaT);
+                                                          double deltaT,
+                                                          Eigen::Vector3d positionOffset);
 };

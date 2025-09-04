@@ -17,4 +17,5 @@ add_executable(MotionDistortionCorrection
     src/main.cpp
     src/TrajectoryGenerator.cpp
     src/IMUMeasurementsExtractor.cpp
+    src/TrajectoryExtractor.cpp
 )

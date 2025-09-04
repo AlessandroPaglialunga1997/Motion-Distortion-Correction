@@ -3,8 +3,9 @@
 #include "TrajectoryGenerator.hpp"
 #include "IMUMeasurementsExtractor.hpp"
 #include "Constants.hpp"
+#include "TrajectoryExtractor.hpp"
 
-void printIMUMeasurements(const std::vector<IMUMeasurment>& measurements) {
+/*void printIMUMeasurements(const std::vector<IMUMeasurment>& measurements) {
     for (const auto& meas : measurements) {
         std::cout << "Timestamp: " << meas.timestamp << "\n";
         std::cout << "Accelerometer: [" 
@@ -17,27 +18,57 @@ void printIMUMeasurements(const std::vector<IMUMeasurment>& measurements) {
                   << meas.gyroscope.z() << "]\n";
         std::cout << "-----------------------------\n";
     }
-}
+}*/
 
 
 int main() {
+    IMUMeasurmentsExtractor imuMeasurmentsExtractor;
     TrajectoryGenerator trajectoryGenerator;
-    std::vector<TrajectoryPoint> helicalTrajectory = 
+    TrajectoryExtractor trajectoryExtractor;
+
+    std::vector<TrajectoryPoint> generatedHelicalTrajectory = 
                                  trajectoryGenerator.getHelicalTrajectory(Constants::helicalRadius,
                                                                           Constants::helicalRadius, 
                                                                           Constants::trajectoryDuration, 
-                                                                          Constants::trajectoryDeltaT);
-    std::ofstream file("helicalTrajectory.dat");
-    for (const TrajectoryPoint& currPoint : helicalTrajectory) {
-        file << currPoint.position(0) << " "    //x
+                                                                          Constants::trajectoryDeltaT,
+                                                                          Constants::positionOffset);
+
+    std::vector<IMUMeasurment> imuMeasurements = imuMeasurmentsExtractor.extractIMUMeasurments(generatedHelicalTrajectory);
+
+    std::vector<TrajectoryPoint> extractedHelicalTrajectory =
+                                 trajectoryExtractor.extractTrajectoryPoints(imuMeasurements);
+    
+
+    std::ofstream genFile("generatedHelicalTrajectory.dat");
+    for (const TrajectoryPoint& currPoint : generatedHelicalTrajectory) {
+        genFile << currPoint.position(0) << " "    //x
              << currPoint.position(1) << " "    //y
              << currPoint.position(2) << "\n";  //z
     }
-    file.close();
+    genFile.close();
 
-    IMUMeasurmentsExtractor imuMeasurmentsExtractor;
-    std::vector<IMUMeasurment> imuMeasurements = imuMeasurmentsExtractor.extractIMUMeasurments(helicalTrajectory);
-    printIMUMeasurements(imuMeasurements);
+    std::ofstream imuFile("imuHelicalTrajectory.dat");
+    for (const IMUMeasurment& currMeasurement : imuMeasurements) {
+        imuFile << "Time: " << currMeasurement.timestamp << " "
+                << "Accelerometer: [" 
+                << currMeasurement.accelerometer.x() << ", "
+                << currMeasurement.accelerometer.y() << ", "
+                << currMeasurement.accelerometer.z() << "] "
+                << "Gyroscope: [" 
+                << currMeasurement.gyroscope.x() << ", "
+                << currMeasurement.gyroscope.y() << ", "
+                << currMeasurement.gyroscope.z() << "]\n";
+    }
+    imuFile.close();
+
+    std::ofstream extFile("extractedHelicalTrajectory.dat");
+    for (const TrajectoryPoint& currPoint : extractedHelicalTrajectory) {
+        extFile << currPoint.position(0) << " "
+                << currPoint.position(1) << " "
+                << currPoint.position(2) << "\n";
+    }
+    extFile.close();
+
 
     return 0;
 }

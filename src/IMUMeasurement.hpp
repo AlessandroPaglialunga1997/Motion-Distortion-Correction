@@ -3,6 +3,7 @@
 
 struct IMUMeasurment {
     double timestamp;
-    Eigen::Vector3d accelerometer; // it can be seen as the linear acceleration of the robot
-    Eigen::Vector3d gyroscope;     // it can be seen as the angular velocity of the robot
+    // following acceleration must be applied with (timestamp) orientation
+    Eigen::Vector3d accelerometer; // constant linear acceleration from timestamp to timestamp+deltaT that will bring the robot to the (timestamp+deltaT) position
+    Eigen::Vector3d gyroscope;     // constant angula acceleration from timestamp to timestamp+deltaT that will bring the robot to the (timestamp+deltaT) orientation
 };
