@@ -2,7 +2,7 @@
 #include <cmath>
 
 std::vector<TrajectoryPoint> TrajectoryGenerator::getHelicalTrajectory(double radius, 
-                                                                       double step, 
+                                                                       double height, 
                                                                        double duration, 
                                                                        double deltaT) {
     std::vector<TrajectoryPoint> trajectory;
@@ -13,7 +13,7 @@ std::vector<TrajectoryPoint> TrajectoryGenerator::getHelicalTrajectory(double ra
         currPoint.timestamp = timestamp;
         currPoint.position = Eigen::Vector3d(radius * cos(omega * timestamp), 
                                              radius * sin(omega * timestamp), 
-                                             step * timestamp / duration);
+                                             height * timestamp / duration);
         double currYaw = omega * timestamp;
         currPoint.orientation <<    cos(currYaw), -sin(currYaw), 0,
                                     sin(currYaw),  cos(currYaw), 0,

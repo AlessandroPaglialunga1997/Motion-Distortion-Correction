@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(TrajectoryGeneratorProject)
+project(MotionDistortionCorrection)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -13,7 +13,8 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(src)
 
 # Add executable with source files from src directory
-add_executable(TrajectoryGenerator
+add_executable(MotionDistortionCorrection
     src/main.cpp
     src/TrajectoryGenerator.cpp
+    src/IMUMeasurementsExtractor.cpp
 )
