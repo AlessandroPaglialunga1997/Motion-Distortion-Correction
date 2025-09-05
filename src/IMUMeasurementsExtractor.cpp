@@ -1,7 +1,7 @@
 #include "IMUMeasurementsExtractor.hpp"
 #include <iostream>
 
-std::vector<IMUMeasurment> IMUMeasurmentsExtractor::extractIMUMeasurments(std::vector<TrajectoryPoint> trajectory){
+std::vector<IMUMeasurment> IMUMeasurementsExtractor::extractIMUMeasurments(std::vector<TrajectoryPoint> trajectory){
     std::vector<IMUMeasurment> imuMeasurements;
     IMUMeasurment currIMUMeasurement;
 
@@ -32,7 +32,7 @@ std::vector<IMUMeasurment> IMUMeasurmentsExtractor::extractIMUMeasurments(std::v
     return imuMeasurements;
 }
 
-Eigen::Vector3d IMUMeasurmentsExtractor::estimateAngularVelocity(TrajectoryPoint currPose, TrajectoryPoint nextPose){
+Eigen::Vector3d IMUMeasurementsExtractor::estimateAngularVelocity(TrajectoryPoint currPose, TrajectoryPoint nextPose){
     double deltaT = nextPose.timestamp - currPose.timestamp;
     Eigen::Matrix3d R_rel = currPose.orientation.transpose() * nextPose.orientation;
     Eigen::AngleAxisd aa(R_rel);
@@ -40,7 +40,7 @@ Eigen::Vector3d IMUMeasurmentsExtractor::estimateAngularVelocity(TrajectoryPoint
     return omega;
 }
 
-Eigen::Vector3d IMUMeasurmentsExtractor::estimateLinearAcceleration(TrajectoryPoint prevPose,
+Eigen::Vector3d IMUMeasurementsExtractor::estimateLinearAcceleration(TrajectoryPoint prevPose,
                                                                     TrajectoryPoint currPose,
                                                                     TrajectoryPoint nextPose){
     double prevDeltaT = currPose.timestamp - prevPose.timestamp;

@@ -4,7 +4,7 @@
 #include "IMUMeasurement.hpp"
 #include "Constants.hpp"
 
-class IMUMeasurmentsExtractor{
+class IMUMeasurementsExtractor{
         
     private:
         Eigen::Vector3d estimateAngularVelocity(TrajectoryPoint currPose, 
