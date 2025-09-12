@@ -4,57 +4,28 @@
 #include "IMUMeasurementsExtractor.hpp"
 #include "Constants.hpp"
 #include "TrajectoryExtractor.hpp"
+#include "LiDARMeasurementsGenerator.hpp"
 
-
-void printMaxTrajectoryError(const std::vector<TrajectoryPoint>& expectedTraj,
-                             const std::vector<TrajectoryPoint>& actualTraj) {
-    double maxPosError = 0.0;
-    double maxOriError = 0.0;
-
-    for (size_t i = 0; i < expectedTraj.size(); ++i) {
-        const auto& expectedPose = expectedTraj[i];
-        const auto& actualPose = actualTraj[i];
-
-        // Errore di posizione
-        double posError = (expectedPose.position - actualPose.position).norm();
-        maxPosError = std::max(maxPosError, posError);
-
-        // Errore di orientamento
-        Eigen::Matrix3d R_rel = expectedPose.orientation.transpose() * actualPose.orientation;
-        Eigen::AngleAxisd angleAxis(R_rel);
-        double oriError = std::abs(angleAxis.angle());
-        maxOriError = std::max(maxOriError, oriError);
-    }
-
-    std::cout << "Errore massimo di posizione: " << maxPosError << " metri" << std::endl;
-    std::cout << "Errore massimo di orientamento: " << maxOriError << " radianti" << std::endl;
-}
-
-
-int main() {
+int step1main() {
     IMUMeasurementsExtractor imuMeasurementsExtractor;
     TrajectoryGenerator trajectoryGenerator;
     TrajectoryExtractor trajectoryExtractor;
 
-    std::vector<TrajectoryPoint> generatedHelicalTrajectory = 
-                                 trajectoryGenerator.getHelicalTrajectory(Constants::helicalRadius,
-                                                                          Constants::helicalRadius, 
-                                                                          Constants::trajectoryDuration, 
-                                                                          Constants::trajectoryDeltaT,
-                                                                          Constants::positionOffset);
+    std::vector<TrajectoryPoint> generatedHelicalTrajectory =  trajectoryGenerator.getHelicalTrajectory(Constants::helicalRadius,
+                                                                                                        Constants::helicalHeight, 
+                                                                                                        Constants::trajectoryDuration, 
+                                                                                                        Constants::trajectoryDeltaT,
+                                                                                                        Constants::helicalPositionOffset);
 
     std::vector<IMUMeasurment> imuMeasurements = imuMeasurementsExtractor.extractIMUMeasurments(generatedHelicalTrajectory);
 
-    std::vector<TrajectoryPoint> extractedHelicalTrajectory =
-                                 trajectoryExtractor.extractTrajectoryPoints(imuMeasurements);
+    std::vector<TrajectoryPoint> extractedHelicalTrajectory = trajectoryExtractor.extractTrajectoryPoints(imuMeasurements);
     
-    printMaxTrajectoryError(generatedHelicalTrajectory, extractedHelicalTrajectory);
-
     std::ofstream genFile("generatedHelicalTrajectory.dat");
     for (const TrajectoryPoint& currPoint : generatedHelicalTrajectory) {
         genFile << currPoint.position(0) << " "    //x
-             << currPoint.position(1) << " "    //y
-             << currPoint.position(2) << "\n";  //z
+                << currPoint.position(1) << " "    //y
+                << currPoint.position(2) << "\n";  //z
     }
     genFile.close();
 
@@ -80,6 +51,56 @@ int main() {
     }
     extFile.close();
 
+
+    return 0;
+}
+
+
+int main(){
+    LiDARMeasurementsGenerator lidarMeasurementsGenerator;
+    TrajectoryGenerator trajectoryGenerator;
+
+    // 1. Generate the point cloud 
+    //      to simulate LiDAR measurements
+    /*std::vector<LiDARMeasurement> generatedLiDARMeasurements = lidarMeasurementsGenerator.getSphere(0.0,
+                                                                                                    Constants::sphereRadius,
+                                                                                                    Constants::sphereAngularStep,
+                                                                                                    Constants::spherePositionOffset,
+                                                                                                    Eigen::Vector3d::Zero(),
+                                                                                                    Eigen::Matrix3d::Identity());
+    // 2. Visualize the point cloud
+    std::ofstream genFile("generatedSpherePoints.dat");
+    for (const LiDARMeasurement& currPoint : generatedLiDARMeasurements) {
+        genFile << currPoint.position(0) << " "    //x
+                << currPoint.position(1) << " "    //y
+                << currPoint.position(2) << "\n";  //z
+    }
+    genFile.close();*/
+
+    // 3. Generate the Motion Distortion 
+    //      since LiDAR is mounted on the robot, after some steps the point cloud is moved because the LiDAR measurments are based from current robot reference frame
+    std::vector<TrajectoryPoint> generatedHelicalTrajectory = trajectoryGenerator.getHelicalTrajectory(Constants::helicalRadius,
+                                                                                                       Constants::helicalHeight, 
+                                                                                                       Constants::trajectoryDuration, 
+                                                                                                       Constants::trajectoryDeltaT,
+                                                                                                       Constants::helicalPositionOffset);
+    std::vector<TrajectoryPoint> partialTrajectory;
+    partialTrajectory.insert(partialTrajectory.end(), generatedHelicalTrajectory.begin(), generatedHelicalTrajectory.begin() + 3);
+    std::vector<LiDARMeasurement> generatedLiDARMeasurementsTrajectory = lidarMeasurementsGenerator.getSphereTrajectory(generatedHelicalTrajectory,
+                                                                                                                        Constants::sphereRadius,
+                                                                                                                        Constants::sphereAngularStep,
+                                                                                                                        Constants::spherePositionOffset);
+    std::ofstream genFile("generatedSphereTrajectory.dat");
+    for (const LiDARMeasurement& currPoint : generatedLiDARMeasurementsTrajectory) {
+        genFile << currPoint.position(0) << " "    //x
+                << currPoint.position(1) << " "    //y
+                << currPoint.position(2) << "\n";  //z
+    }
+    genFile.close();
+
+    // 4. Remove the Motion Distortion using IMU measurments
+
+    // 5. Check the error between the point cloud obtained at 1. and the one obtained at 4.
 
     return 0;
 }
