@@ -6,7 +6,7 @@
 #include "TrajectoryExtractor.hpp"
 #include "LiDARMeasurementsGenerator.hpp"
 
-int step1main() {
+int main() {
     IMUMeasurementsExtractor imuMeasurementsExtractor;
     TrajectoryGenerator trajectoryGenerator;
     TrajectoryExtractor trajectoryExtractor;
@@ -56,26 +56,26 @@ int step1main() {
 }
 
 
-int main(){
+/*int mainStep2(){
     LiDARMeasurementsGenerator lidarMeasurementsGenerator;
     TrajectoryGenerator trajectoryGenerator;
 
     // 1. Generate the point cloud 
     //      to simulate LiDAR measurements
-    /*std::vector<LiDARMeasurement> generatedLiDARMeasurements = lidarMeasurementsGenerator.getSphere(0.0,
-                                                                                                    Constants::sphereRadius,
-                                                                                                    Constants::sphereAngularStep,
-                                                                                                    Constants::spherePositionOffset,
-                                                                                                    Eigen::Vector3d::Zero(),
-                                                                                                    Eigen::Matrix3d::Identity());
+    std::vector<LiDARMeasurement> generatedSphereLiDARMeasurements = lidarMeasurementsGenerator.getDistortedSpherePoints(0.0,
+                                                                                                                           Constants::sphereRadius,
+                                                                                                                           Constants::sphereAngularStep,
+                                                                                                                           Constants::spherePositionOffset,
+                                                                                                                           Eigen::Vector3d::Zero(),
+                                                                                                                           Eigen::Matrix3d::Identity());
     // 2. Visualize the point cloud
     std::ofstream genFile("generatedSpherePoints.dat");
-    for (const LiDARMeasurement& currPoint : generatedLiDARMeasurements) {
+    for (const LiDARMeasurement& currPoint : generatedSphereLiDARMeasurements) {
         genFile << currPoint.position(0) << " "    //x
                 << currPoint.position(1) << " "    //y
                 << currPoint.position(2) << "\n";  //z
     }
-    genFile.close();*/
+    genFile.close();
 
     // 3. Generate the Motion Distortion 
     //      since LiDAR is mounted on the robot, after some steps the point cloud is moved because the LiDAR measurments are based from current robot reference frame
@@ -86,12 +86,12 @@ int main(){
                                                                                                        Constants::helicalPositionOffset);
     std::vector<TrajectoryPoint> partialTrajectory;
     partialTrajectory.insert(partialTrajectory.end(), generatedHelicalTrajectory.begin(), generatedHelicalTrajectory.begin() + 3);
-    std::vector<LiDARMeasurement> generatedLiDARMeasurementsTrajectory = lidarMeasurementsGenerator.getSphereTrajectory(generatedHelicalTrajectory,
-                                                                                                                        Constants::sphereRadius,
-                                                                                                                        Constants::sphereAngularStep,
-                                                                                                                        Constants::spherePositionOffset);
+    std::vector<LiDARMeasurement> generatedSphereLiDARMeasurementsTrajectory = lidarMeasurementsGenerator.getDistortedSphereTrajectory(generatedHelicalTrajectory,
+                                                                                                                                       Constants::sphereRadius,
+                                                                                                                                       Constants::sphereAngularStep,
+                                                                                                                                       Constants::spherePositionOffset);
     std::ofstream genFile("generatedSphereTrajectory.dat");
-    for (const LiDARMeasurement& currPoint : generatedLiDARMeasurementsTrajectory) {
+    for (const LiDARMeasurement& currPoint : generatedSphereLiDARMeasurementsTrajectory) {
         genFile << currPoint.position(0) << " "    //x
                 << currPoint.position(1) << " "    //y
                 << currPoint.position(2) << "\n";  //z
@@ -104,3 +104,4 @@ int main(){
 
     return 0;
 }
+*/

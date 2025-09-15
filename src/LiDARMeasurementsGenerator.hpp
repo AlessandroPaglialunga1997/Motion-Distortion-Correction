@@ -7,14 +7,14 @@
 class LiDARMeasurementsGenerator {
     
     public:
-        std::vector<LiDARMeasurement> getSphere(double timestamp,
+        std::vector<LiDARMeasurement> getDistortedSpherePoints(double timestamp,
                                                 double radius,
                                                 double angulaStep,
                                                 Eigen::Vector3d positionOffset,
                                                 Eigen::Vector3d positionDistortion,
                                                 Eigen::Matrix3d orientationDistortion);
         
-        std::vector<LiDARMeasurement> getSphereTrajectory(std::vector<TrajectoryPoint> trajectory,
+        std::vector<LiDARMeasurement> getDistortedSphereTrajectory(std::vector<TrajectoryPoint> trajectory,
                                                           double radius,
                                                           double angularStep,
                                                           Eigen::Vector3d positionOffset);

@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "IMUMeasurement.hpp"
 #include "TrajectoryPoint.hpp"
+#include "PoseEstimator.hpp"
 
 class TrajectoryExtractor{
 

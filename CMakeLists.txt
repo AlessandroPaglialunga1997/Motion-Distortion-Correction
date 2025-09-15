@@ -19,4 +19,6 @@ add_executable(MotionDistortionCorrection
     src/IMUMeasurementsExtractor.cpp
     src/TrajectoryExtractor.cpp
     src/LiDARMeasurementsGenerator.cpp
+    src/PoseEstimator.cpp
+    src/MotionDistortionRemover.cpp
 )

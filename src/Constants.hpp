@@ -18,6 +18,6 @@ namespace Constants {
 
     // Sphere
     const double sphereRadius = 1.0;                      // meters
-    const double sphereAngularStep = (M_PI / 90) * 10;    // radians
+    const double sphereAngularStep = (M_PI / 90) * 20;    // radians
     const Eigen::Vector3d spherePositionOffset = Eigen::Vector3d::Zero();
 }

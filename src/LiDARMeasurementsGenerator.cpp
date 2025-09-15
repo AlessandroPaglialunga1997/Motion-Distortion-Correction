@@ -1,11 +1,11 @@
 #include "LiDARMeasurementsGenerator.hpp"
 
-std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getSphere(double timestamp,
-                                                                    double radius,
-                                                                    double angularStep,
-                                                                    Eigen::Vector3d positionOffset,
-                                                                    Eigen::Vector3d positionDistortion,
-                                                                    Eigen::Matrix3d orientation){
+std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getDistortedSpherePoints(double timestamp,
+                                                                                   double radius,
+                                                                                   double angularStep,
+                                                                                   Eigen::Vector3d positionOffset,
+                                                                                   Eigen::Vector3d positionDistortion,
+                                                                                   Eigen::Matrix3d orientation){
     std::vector<LiDARMeasurement> sphere;
     int id = 0;
     for(double angleX_Y = 0; angleX_Y <= 2*M_PI; angleX_Y += angularStep){
@@ -25,7 +25,7 @@ std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getSphere(double times
     return sphere;
 }
 
-std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getSphereTrajectory(std::vector<TrajectoryPoint> trajectory,
+std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getDistortedSphereTrajectory(std::vector<TrajectoryPoint> trajectory,
                                                                               double radius,
                                                                               double angularStep,
                                                                               Eigen::Vector3d positionOffset){
@@ -34,12 +34,12 @@ std::vector<LiDARMeasurement> LiDARMeasurementsGenerator::getSphereTrajectory(st
         const TrajectoryPoint& currPose = *it;
         Eigen::Vector3d positionDistortion = -1 * currPose.position;
         Eigen::Matrix3d orientation = currPose.orientation.transpose();
-        std::vector<LiDARMeasurement> localCurrSphere = getSphere(currPose.timestamp,
-                                                                  radius,
-                                                                  angularStep,
-                                                                  positionOffset,
-                                                                  positionDistortion,
-                                                                  orientation);
+        std::vector<LiDARMeasurement> localCurrSphere = getDistortedSpherePoints(currPose.timestamp,
+                                                                                 radius,
+                                                                                 angularStep,
+                                                                                 positionOffset,
+                                                                                 positionDistortion,
+                                                                                 orientation);
         sphereTrajectory.insert(sphereTrajectory.end(), localCurrSphere.begin(), localCurrSphere.end());                                                         
     }
 
