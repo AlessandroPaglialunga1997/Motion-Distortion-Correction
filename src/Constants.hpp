@@ -17,7 +17,7 @@ namespace Constants {
     const Eigen::Vector3d helicalPositionOffset(-helicalRadius, 0.0, 0.0); // meters
 
     // Sphere
-    const double sphereRadius = 1.0;                      // meters
-    const double sphereAngularStep = (M_PI / 90) * 20;    // radians
-    const Eigen::Vector3d spherePositionOffset = Eigen::Vector3d::Zero();
+    const double sphereRadius = 0.5;                      // meters
+    const double sphereAngularStep = (M_PI / 90) * 30;    // radians
+    const Eigen::Vector3d spherePositionOffset(0.0, 0.0, 0.0);;
 }

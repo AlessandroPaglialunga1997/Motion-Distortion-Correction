@@ -3,6 +3,7 @@
 #include "LiDARMeasurement.hpp"
 #include "IMUMeasurement.hpp"
 #include "TrajectoryPoint.hpp"
+#include "PoseEstimator.hpp"
 
 class MotionDistortionRemover {
     

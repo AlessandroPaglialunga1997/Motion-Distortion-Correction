@@ -5,8 +5,9 @@
 #include "Constants.hpp"
 #include "TrajectoryExtractor.hpp"
 #include "LiDARMeasurementsGenerator.hpp"
+#include "MotionDistortionRemover.hpp"
 
-int main() {
+/*int main() {
     IMUMeasurementsExtractor imuMeasurementsExtractor;
     TrajectoryGenerator trajectoryGenerator;
     TrajectoryExtractor trajectoryExtractor;
@@ -53,13 +54,15 @@ int main() {
 
 
     return 0;
-}
+}*/
 
 
-/*int mainStep2(){
+int main(){
     LiDARMeasurementsGenerator lidarMeasurementsGenerator;
     TrajectoryGenerator trajectoryGenerator;
-
+    MotionDistortionRemover motionDistortionRemover;
+    IMUMeasurementsExtractor imuMeasurementsExtractor;
+    
     // 1. Generate the point cloud 
     //      to simulate LiDAR measurements
     std::vector<LiDARMeasurement> generatedSphereLiDARMeasurements = lidarMeasurementsGenerator.getDistortedSpherePoints(0.0,
@@ -85,23 +88,36 @@ int main() {
                                                                                                        Constants::trajectoryDeltaT,
                                                                                                        Constants::helicalPositionOffset);
     std::vector<TrajectoryPoint> partialTrajectory;
-    partialTrajectory.insert(partialTrajectory.end(), generatedHelicalTrajectory.begin(), generatedHelicalTrajectory.begin() + 3);
-    std::vector<LiDARMeasurement> generatedSphereLiDARMeasurementsTrajectory = lidarMeasurementsGenerator.getDistortedSphereTrajectory(generatedHelicalTrajectory,
+    partialTrajectory.insert(partialTrajectory.end(), generatedHelicalTrajectory.begin(), generatedHelicalTrajectory.begin() + 5);
+    std::vector<LiDARMeasurement> distortedSphereLiDARMeasurementsTrajectory = lidarMeasurementsGenerator.getDistortedSphereTrajectory(generatedHelicalTrajectory,
                                                                                                                                        Constants::sphereRadius,
                                                                                                                                        Constants::sphereAngularStep,
                                                                                                                                        Constants::spherePositionOffset);
-    std::ofstream genFile("generatedSphereTrajectory.dat");
-    for (const LiDARMeasurement& currPoint : generatedSphereLiDARMeasurementsTrajectory) {
-        genFile << currPoint.position(0) << " "    //x
+    std::ofstream distortedSphereFile("distortedSphereTrajectory.dat");
+    for (const LiDARMeasurement& currPoint : distortedSphereLiDARMeasurementsTrajectory) {
+        distortedSphereFile << currPoint.position(0) << " "    //x
                 << currPoint.position(1) << " "    //y
                 << currPoint.position(2) << "\n";  //z
     }
-    genFile.close();
+    distortedSphereFile.close();
 
     // 4. Remove the Motion Distortion using IMU measurments
+    std::vector<IMUMeasurment> imuMeasurements = imuMeasurementsExtractor.extractIMUMeasurments(generatedHelicalTrajectory);
+    std::vector<LiDARMeasurement>  correctedSphereLiDARMeasurementsTrajectory = motionDistortionRemover.removeDistortionUsingIMU(distortedSphereLiDARMeasurementsTrajectory,
+                                                                                                                                 imuMeasurements);
+    std::ofstream correctedSphereFile("correctedSphereTrajectory.dat");
+    for (const LiDARMeasurement& currPoint : correctedSphereLiDARMeasurementsTrajectory) {
+        correctedSphereFile << currPoint.position(0) << " "    //x
+                << currPoint.position(1) << " "    //y
+                << currPoint.position(2) << "\n";  //z
+    }
+    correctedSphereFile.close();
+
+    std::cout << "distortedSphereLiDARMeasurementsTrajectory size: " << distortedSphereLiDARMeasurementsTrajectory.size() << std::endl;
+    std::cout << "distortedSphereLiDARMeasurementsTrajectory size: " << imuMeasurements.size() << std::endl;
+    std::cout << "distortedSphereLiDARMeasurementsTrajectory size: " << correctedSphereLiDARMeasurementsTrajectory.size() << std::endl;
 
     // 5. Check the error between the point cloud obtained at 1. and the one obtained at 4.
 
     return 0;
 }
-*/

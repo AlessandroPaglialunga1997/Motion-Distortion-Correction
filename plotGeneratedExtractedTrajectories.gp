@@ -1,4 +1,4 @@
-set title "Generated vs Extracted Helical Trajectory"
+set title "True Robot Trajecotry VS Extracted Trajectory from IMU"
 set xlabel "X"
 set ylabel "Y"
 set zlabel "Z"
