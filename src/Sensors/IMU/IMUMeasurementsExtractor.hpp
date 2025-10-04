@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "TrajectoryPoint.hpp"
+#include "TrajectoryTools/TrajectoryPoint.hpp"
 #include "IMUMeasurement.hpp"
-#include "Constants.hpp"
+#include "Constants/TrajectoriesConstants.hpp"
 
 class IMUMeasurementsExtractor{
         

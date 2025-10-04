@@ -1,11 +1,25 @@
 #include <iostream>
 #include <fstream>
-#include "TrajectoryGenerator.hpp"
-#include "IMUMeasurementsExtractor.hpp"
-#include "Constants.hpp"
-#include "TrajectoryExtractor.hpp"
-#include "LiDARMeasurementsGenerator.hpp"
-#include "MotionDistortionRemover.hpp"
+#include "Constants/TrajectoriesConstants.hpp"
+#include "MotionDistortionRemovers/MotionDistortionRemover.hpp"
+#include "Readers/FileReader.hpp"
+#include "Sensors/LiDAR/LiDARMeasurementsGenerator.hpp"
+#include "Sensors/IMU/IMUMeasurementsExtractor.hpp"
+#include "TrajectoryTools/TrajectoryGenerator.hpp"
+#include "TrajectoryTools/TrajectoryExtractor.hpp"
+#include "TrajectoryTools/TrajectoryPoint.hpp"
+
+int main(){
+    FileReader fileReader;
+    std::vector<TrajectoryPointWithQuaternion> quadHardTrueTrajectory = fileReader.readTrajectoryFile("../input_data/gt-nc-quad-hard.csv", ",", true);
+    std::ofstream genFile("../output_data/quadHardTrueTrajectory.dat");
+    for (const TrajectoryPointWithQuaternion& currPoint : quadHardTrueTrajectory) {
+        genFile << currPoint.position(0) << " "    //x
+                << currPoint.position(1) << " "    //y
+                << currPoint.position(2) << "\n";  //z
+    }
+    return 0;
+}
 
 /*int main() {
     IMUMeasurementsExtractor imuMeasurementsExtractor;
@@ -56,7 +70,7 @@
     return 0;
 }*/
 
-
+/*
 int main(){
     LiDARMeasurementsGenerator lidarMeasurementsGenerator;
     TrajectoryGenerator trajectoryGenerator;
@@ -120,4 +134,4 @@ int main(){
     // 5. Check the error between the point cloud obtained at 1. and the one obtained at 4.
 
     return 0;
-}
+}*/

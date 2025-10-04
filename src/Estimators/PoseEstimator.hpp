@@ -1,6 +1,6 @@
 #pragma once
-#include "IMUMeasurement.hpp"
-#include "TrajectoryPoint.hpp"
+#include "Sensors/IMU/IMUMeasurement.hpp"
+#include "TrajectoryTools/TrajectoryPoint.hpp"
 #include <Eigen/Dense>
 
 class PoseEstimator{

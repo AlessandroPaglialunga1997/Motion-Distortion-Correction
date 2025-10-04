@@ -2,12 +2,10 @@
 #include <Eigen/Dense>
 #include <cmath>
 
-namespace Constants {
-    
+namespace TrajectoriesConstants{
+    // Common Constants
     constexpr double GRAVITY_MAGNITUDE = 9.81;
-
     inline const Eigen::Vector3d GRAVITY_VECTOR{0.0, 0.0, -GRAVITY_MAGNITUDE};
-    // Common Trajectory variables
     const double trajectoryDeltaT = 0.1;    // seconds
     const double trajectoryDuration = 10;   // seconds
 

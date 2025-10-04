@@ -15,10 +15,11 @@ include_directories(src)
 # Add executable with source files from src directory
 add_executable(MotionDistortionCorrection
     src/main.cpp
-    src/TrajectoryGenerator.cpp
-    src/IMUMeasurementsExtractor.cpp
-    src/TrajectoryExtractor.cpp
-    src/LiDARMeasurementsGenerator.cpp
-    src/PoseEstimator.cpp
-    src/MotionDistortionRemover.cpp
+    src/Estimators/PoseEstimator.cpp
+    src/MotionDistortionRemovers/MotionDistortionRemover.cpp
+    src/Readers/FileReader.cpp
+    src/Sensors/LiDAR/LiDARMeasurementsGenerator.cpp
+    src/Sensors/IMU/IMUMeasurementsExtractor.cpp
+    src/TrajectoryTools/TrajectoryGenerator.cpp
+    src/TrajectoryTools/TrajectoryExtractor.cpp
 )

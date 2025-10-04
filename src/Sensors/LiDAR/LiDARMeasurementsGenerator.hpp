@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include "LiDARMeasurement.hpp"
-#include "TrajectoryPoint.hpp"
+#include "Sensors/LiDAR/LiDARMeasurement.hpp"
+#include "TrajectoryTools/TrajectoryPoint.hpp"
 #include <cmath>
 
 class LiDARMeasurementsGenerator {
