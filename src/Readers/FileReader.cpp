@@ -46,3 +46,35 @@ std::vector<TrajectoryPointWithQuaternion> FileReader::readTrajectoryFile(const 
     file.close();
     return trajectory;
 }
+
+std::vector<IMUMeasurment> FileReader::readIMUMeasurementsFromBag(const std::string& bagFilePath, const std::string& imuTopic) {
+    std::vector<IMUMeasurment> imuMeasurements;
+
+    rosbag::Bag bag;
+    try {
+        bag.open(bagFilePath, rosbag::bagmode::Read);
+    } catch (const rosbag::BagException& e) {
+        throw std::runtime_error("Failed to open bag file: " + std::string(e.what()));
+    }
+
+    std::vector<std::string> topics = {imuTopic};
+    rosbag::View view(bag, rosbag::TopicQuery(topics));
+
+    for (const rosbag::MessageInstance& m : view) {
+        sensor_msgs::Imu::ConstPtr imuMsg = m.instantiate<sensor_msgs::Imu>();
+        if (imuMsg != nullptr) {
+            IMUMeasurment measurement;
+            measurement.timestamp = imuMsg->header.stamp.toSec();
+            measurement.accelerometer = Eigen::Vector3d(imuMsg->linear_acceleration.x,
+                                                        imuMsg->linear_acceleration.y,
+                                                        imuMsg->linear_acceleration.z);
+            measurement.gyroscope = Eigen::Vector3d(imuMsg->angular_velocity.x,
+                                                    imuMsg->angular_velocity.y,
+                                                    imuMsg->angular_velocity.z);
+            imuMeasurements.push_back(measurement);
+        }
+    }
+
+    bag.close();
+    return imuMeasurements;
+}
